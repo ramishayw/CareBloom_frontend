@@ -84,11 +84,11 @@ export default function TabBar ({ state, descriptors, navigation } : BottomTabBa
 const styles = StyleSheet.create({
   tabbar: {
     position: 'absolute',
-    bottom: 50,
+    bottom: 52,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#f1f1f1',
-    marginHorizontal: 40,
+    marginHorizontal: 30,
     paddingVertical: 15,
     borderRadius: 35,
     shadowColor: '#776391',
