@@ -1,11 +1,10 @@
 import Header from '@/components/Header';
+import HealthTipCard from '@/components/HealthTipCard';
 import { MaterialIcons } from '@expo/vector-icons';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
-  Animated,
-  Dimensions,
   Image,
   ScrollView,
   StyleSheet,
@@ -28,58 +27,17 @@ export default function Home() {
   const productsScrollRef = useRef(null);
   const [workshopsScrollPosition, setWorkshopsScrollPosition] = useState(0);
   const [productsScrollPosition, setProductsScrollPosition] = useState(0);
-  
-  // Health tips state and animation
-  const [currentTipIndex, setCurrentTipIndex] = useState(0);
-  const slideAnim = useRef(new Animated.Value(0)).current;
-  const screenWidth = Dimensions.get('window').width;
-
-  const healthTips = [
-    {
-      title: "Stay Hyderated",
-      desciption: "Drinking plenty of water is essential for both you and your baby's health. Aim for at least 8 glasses a day.",
-      image: require("../../assets/images/Home/Dehydration-During-Pregnancy-1.jpg"),
-    },
-    {
-      title: "Healthy Eating",
-      desciption: "Eating a balanced diet is important for both you and your baby's health. Focus on whole, nutrient-dense foods.",
-      image: require("../../assets/images/Home/pexels-ella-olsson-572949-1640777.jpg"),
-    },
-    {
-      title: "Sleep Well",
-      desciption: "Sleep is essential for both you and your baby's health. Get enough quality sleep each night.",
-      image: require("../../assets/images/Home/pexels-olly-3807624.jpg"),
-    }
-  ];
-
-  // Auto-cycle health tips every 5 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const nextIndex = (currentTipIndex + 1) % healthTips.length;
-      
-      // Slide to next tip
-      Animated.timing(slideAnim, {
-        toValue: -screenWidth * nextIndex,
-        duration: 500,
-        useNativeDriver: true,
-      }).start();
-      
-      setCurrentTipIndex(nextIndex);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [currentTipIndex, slideAnim, healthTips.length, screenWidth]);
 
   const workshops = [
     {
       title: "Prenatal Yoga",
       subtitle: "Learn gentle exercises to prepare for labor.",
-      image: "https://www.auromere.com/images/Yoga-Pastel-Sun.jpg",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi9PL4kSTOuI_Oaf8cSGX8fwBIxjGcE_jKXQ&s",
     },
     {
       title: "Breastfeeding Basics",
       subtitle: "Master the art of breastfeeding.",
-      image: "https://cdn-icons-png.flaticon.com/512/3793/3793596.png",
+      image: "https://cdn-icons-png.flaticon.com/512/3793/3793589.png",
     },
     {
       title: "Baby Care 101",
@@ -170,18 +128,6 @@ export default function Home() {
   const isProductsAtStart = productsScrollPosition === 0;
   const isProductsAtEnd = productsScrollPosition >= (products.length - 2) * cardWidth;
 
-  // Get current health tip
-  const currentTip = healthTips[currentTipIndex];
-
-  const handleTipNavigation = (index) => {
-    Animated.timing(slideAnim, {
-      toValue: -screenWidth * index,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-    setCurrentTipIndex(index);
-  };
-
   return (
     <>
     <Header />
@@ -224,48 +170,7 @@ export default function Home() {
       </View>
 
       {/* Health Tip */}
-      <View>
-        <Text style={styles.sectionTitle}>Health Tips</Text>
-        <View style={styles.healthTipWrapper}>
-          <Animated.View 
-            style={[
-              styles.healthTipSlider,
-              {
-                transform: [{ translateX: slideAnim }],
-                width: screenWidth * healthTips.length
-              }
-            ]}
-          >
-            {healthTips.map((tip, index) => (
-              <View key={index} style={[styles.healthTipContainer, { width: screenWidth - 32 }]}>
-                <Image
-                  source={tip.image}
-                  style={styles.tipImage}
-                  resizeMode="cover" 
-                />
-                <View style={styles.tipText}>
-                  <Text style={styles.bold}>{tip.title}</Text> {"\n\n"}
-                  <Text style={styles.text}>{tip.desciption}</Text>
-                </View>
-              </View>
-            ))}
-          </Animated.View>
-        </View>
-
-        {/* Health tip indicators */}
-        {/* <View style={styles.indicatorContainer}>
-          {healthTips.map((_, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[
-                styles.indicator,
-                currentTipIndex === index ? styles.activeIndicator : styles.inactiveIndicator
-              ]}
-              onPress={() => handleTipNavigation(index)}
-            />
-          ))}
-        </View> */}
-      </View>
+      <HealthTipCard />
 
       {/* Workshops */}
       <View>
@@ -286,9 +191,11 @@ export default function Home() {
           >
             {workshops.map((item, index) => (
               <View key={index} style={styles.card}>
-                <Image source={{ uri: item.image }} style={styles.cardImage} />
-                <Text style={styles.cardTitle}>{item.title}</Text>
-                <Text style={styles.cardSubtitle}>{item.subtitle}</Text>
+                <Image source={{ uri: item.image }} style={styles.cardImage} /> 
+                <Text style={styles.cardContent}> 
+                  <Text style={styles.cardTitle}>{item.title}</Text> {"\n"}
+                  <Text style={styles.cardSubtitle}>{item.subtitle}</Text>
+                </Text>
               </View>
             ))}
           </ScrollView>
@@ -321,8 +228,10 @@ export default function Home() {
             {products.map((item, index) => (
               <View key={index} style={styles.card}>
                 <Image source={{ uri: item.image }} style={styles.cardImage} />
-                <Text style={styles.cardTitle}>{item.title}</Text>
-                <Text style={styles.cardSubtitle}>{item.subtitle}</Text>
+                <Text style={styles.cardContent}> 
+                  <Text style={styles.cardTitle}>{item.title}</Text> {"\n"}
+                  <Text style={styles.cardSubtitle}>{item.subtitle}</Text>
+                </Text>
               </View>
             ))}
           </ScrollView>
@@ -461,20 +370,25 @@ const styles = StyleSheet.create({
     width: 160,
     backgroundColor: "#f9f9f9",
     borderRadius: 12,
-    padding: 12,
+    // padding: 12,
     marginRight: 12,
   },
   cardImage: {
     width: "100%",
     height: 100,
-    borderRadius: 8,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
     marginBottom: 8,
     resizeMode: "contain",
+  },
+  cardContent: {
+    paddingHorizontal: 12,
+    paddingBottom: 12,
   },
   cardTitle: {
     fontWeight: "bold",
     fontSize: 14,
-    marginBottom: 4,
+    lineHeight: 30
   },
   cardSubtitle: {
     fontSize: 12,
