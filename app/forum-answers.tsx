@@ -1,33 +1,40 @@
-import Header from "@/components/Header";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function ForumAnswers() {
+export default function QuestionDetails() {
   const { id, question, answers } = useLocalSearchParams();
 
-  // Sample answers data - replace with actual data fetching
-  const sampleAnswers = [
+  // Sample question data
+  const questionData = {
+    author: "Sophia Clark",
+    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
+    content: "I'm 10 weeks pregnant and I've been experiencing some spotting. Is this normal?",
+    timestamp: "10w ago",
+    comments: 3
+  };
+
+  // Sample answers data
+  const answersData = [
     {
       id: 1,
-      author: "MomToBe2024",
-      content: "I experienced nausea and fatigue during my first trimester. Make sure to eat small, frequent meals and get plenty of rest!",
-      likes: 15,
-      timestamp: "2 hours ago"
-    },
+      author: "Medical Advice",
+      avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&h=100&fit=crop&crop=face",
+      content: "Spotting can be normal in early pregnancy, but it's important to consult your doctor to rule out any complications.",
+      verifiedBy: "Verified by Dr. Olivia Bennett",
+      comments: 1,
+      isVerified: true
+    }
+  ];
+
+  // Sample replies
+  const replies = [
     {
-      id: 2,
-      author: "HealthyMama",
-      content: "Morning sickness, breast tenderness, and mood swings are very common. Don't worry, it gets better in the second trimester!",
-      likes: 8,
-      timestamp: "5 hours ago"
-    },
-    {
-      id: 3,
-      author: "FirstTimeMom",
-      content: "I had food aversions and couldn't stand certain smells. Ginger tea really helped with the nausea.",
-      likes: 12,
-      timestamp: "1 day ago"
+      id: 1,
+      author: "Sophia Clark",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b612?w=100&h=100&fit=crop&crop=face",
+      content: "Thank you for your advice, Dr. Bennett. I'll schedule an appointment with my doctor.",
+      timestamp: "2w ago"
     }
   ];
 
@@ -35,147 +42,259 @@ export default function ForumAnswers() {
     router.back();
   };
 
-  const handleLike = (answerId) => {
-    console.log("Liked answer:", answerId);
-    // Handle like functionality
-  };
-
   return (
-    <>
-      <Header />
+    <KeyboardAvoidingView 
+      style={{ flex: 1 }} 
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <View style={styles.container}>
-        {/* Back Button and Question Header */}
-        <View style={styles.headerSection}>
+        {/* Custom Header */}
+        <View style={styles.header}>
           <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
             <Ionicons name="chevron-back" size={24} color="#333" />
           </TouchableOpacity>
-          <Text style={styles.questionTitle}>{question}</Text>
-          <Text style={styles.answersCount}>{answers} answers</Text>
+          <Text style={styles.headerTitle}>Question</Text>
+          <View style={styles.headerRight} />
         </View>
 
-        {/* Answers List */}
-        <ScrollView style={styles.answersList} showsVerticalScrollIndicator={false}>
-          {sampleAnswers.map((answer) => (
+        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          {/* Original Question */}
+          <View style={styles.questionCard}>
+            <View style={styles.userRow}>
+              <Image source={{ uri: questionData.avatar }} style={styles.avatar} />
+              <View style={styles.userInfo}>
+                <Text style={styles.userName}>{questionData.author}</Text>
+                <Text style={styles.questionText}>{questionData.content}</Text>
+                <Text style={styles.timestamp}>{questionData.timestamp}</Text>
+              </View>
+            </View>
+
+            <View style={styles.interactionRow}>
+              <View style={styles.commentCount}>
+                <Ionicons name="chatbubble-outline" size={16} color="#666" />
+                <Text style={styles.countText}>{questionData.comments}</Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Answers Section */}
+          <Text style={styles.sectionTitle}>Answers</Text>
+
+          {answersData.map((answer) => (
             <View key={answer.id} style={styles.answerCard}>
-              <View style={styles.answerHeader}>
-                <Text style={styles.authorName}>{answer.author}</Text>
-                <Text style={styles.timestamp}>{answer.timestamp}</Text>
+              <View style={styles.userRow}>
+                <Image source={{ uri: answer.avatar }} style={styles.avatar} />
+                <View style={styles.userInfo}>
+                  <Text style={styles.userName}>{answer.author}</Text>
+                  <Text style={styles.answerText}>{answer.content}</Text>
+                  {answer.isVerified && (
+                    <Text style={styles.verifiedText}>{answer.verifiedBy}</Text>
+                  )}
+                </View>
               </View>
-              <Text style={styles.answerContent}>{answer.content}</Text>
-              <View style={styles.answerFooter}>
-                <TouchableOpacity 
-                  style={styles.likeButton}
-                  onPress={() => handleLike(answer.id)}
-                >
-                  <Ionicons name="heart-outline" size={16} color="#666" />
-                  <Text style={styles.likeCount}>{answer.likes}</Text>
-                </TouchableOpacity>
+                
+              <View style={styles.interactionRow}>
+                <View style={styles.commentCount}>
+                  <Ionicons name="chatbubble-outline" size={16} color="#666" />
+                  <Text style={styles.countText}>{answer.comments}</Text>
+                </View>
               </View>
+
+              {/* Replies */}
+              {replies.map((reply) => (
+                <View key={reply.id} style={styles.replyContainer}>
+                  <View style={styles.userRow}>
+                    <Image source={{ uri: reply.avatar }} style={styles.smallAvatar} />
+                    <View style={styles.userInfo}>
+                      <View style={styles.replyHeader}>
+                        <Text style={styles.userName}>{reply.author}</Text>
+                        <Text style={styles.replyTimestamp}>{reply.timestamp}</Text>
+                      </View>
+                      <Text style={styles.replyText}>{reply.content}</Text>
+                    </View>
+                  </View>
+                </View>
+              ))}
             </View>
           ))}
         </ScrollView>
 
-        {/* Add Answer Button */}
-        <TouchableOpacity style={styles.addAnswerButton}>
-          <Text style={styles.addAnswerText}>Add Answer</Text>
-        </TouchableOpacity>
+        {/* Write Response Input */}
+        <View style={styles.writeContainer}>
+          <Image 
+            source={{ uri: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face" }} 
+            style={styles.writeAvatar} 
+          />
+          <TouchableOpacity style={styles.writeInput}>
+            <Text style={styles.writePlaceholder}>Write</Text>
+            <Text style={styles.writeSubtext}>RESPONSE</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.attachButton}>
+            <Ionicons name="image-outline" size={20} color="#666" />
+          </TouchableOpacity>
+        </View>
       </View>
-    </>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f1f1f1",
+    backgroundColor: "#f8f9fa",
   },
-  headerSection: {
-    backgroundColor: "#fff",
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingVertical: 12,
+    paddingTop: 50,
+    backgroundColor: "#fff",
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0",
   },
   backButton: {
-    marginBottom: 12,
+    padding: 4,
   },
-  questionTitle: {
-    fontSize: 20,
+  headerTitle: {
+    fontSize: 18,
     fontWeight: "600",
     color: "#333",
+  },
+  headerRight: {
+    width: 32,
+  },
+  content: {
+    flex: 1,
+  },
+  questionCard: {
+    backgroundColor: "#fff",
+    padding: 16,
     marginBottom: 8,
   },
-  answersCount: {
-    fontSize: 14,
-    color: "#666",
-  },
-  answersList: {
-    flex: 1,
-    paddingTop: 8,
-  },
-  answerCard: {
-    backgroundColor: "#fff",
-    marginHorizontal: 16,
-    marginBottom: 12,
-    padding: 16,
-    borderRadius: 12,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  answerHeader: {
+  userRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
     marginBottom: 12,
   },
-  authorName: {
-    fontSize: 14,
+  avatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    marginRight: 12,
+  },
+  smallAvatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    marginRight: 8,
+  },
+  userInfo: {
+    flex: 1,
+  },
+  userName: {
+    fontSize: 16,
     fontWeight: "600",
-    color: "#8B5CF6",
+    color: "#333",
+    marginBottom: 4,
+  },
+  questionText: {
+    fontSize: 15,
+    color: "#333",
+    lineHeight: 20,
+    marginBottom: 8,
+  },
+  answerText: {
+    fontSize: 15,
+    color: "#333",
+    lineHeight: 20,
+    marginBottom: 4,
   },
   timestamp: {
-    fontSize: 12,
-    color: "#999",
+    fontSize: 13,
+    color: "#666",
   },
-  answerContent: {
-    fontSize: 16,
-    color: "#333",
-    lineHeight: 22,
-    marginBottom: 12,
+  verifiedText: {
+    fontSize: 13,
+    color: "#666",
+    fontStyle: "italic",
+    marginTop: 4,
   },
-  answerFooter: {
+  interactionRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingLeft: 60,
+  },
+  commentCount: {
     flexDirection: "row",
     alignItems: "center",
   },
-  likeButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 6,
-  },
-  likeCount: {
+  countText: {
     fontSize: 14,
     color: "#666",
     marginLeft: 4,
   },
-  addAnswerButton: {
-    backgroundColor: "#8B5CF6",
-    marginHorizontal: 16,
-    marginVertical: 16,
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: "center",
-  },
-  addAnswerText: {
-    color: "#fff",
-    fontSize: 16,
+  sectionTitle: {
+    fontSize: 18,
     fontWeight: "600",
+    color: "#333",
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    backgroundColor: "#f8f9fa",
+  },
+  answerCard: {
+    backgroundColor: "#fff",
+    padding: 16,
+    marginBottom: 1,
+  },
+  replyContainer: {
+    marginTop: 12,
+    paddingLeft: 20,
+  },
+  replyHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  replyTimestamp: {
+    fontSize: 13,
+    color: "#666",
+    marginLeft: 8,
+  },
+  replyText: {
+    fontSize: 14,
+    color: "#333",
+    lineHeight: 18,
+  },
+  writeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderTopWidth: 1,
+    borderTopColor: "#f0f0f0",
+  },
+  writeAvatar: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    marginRight: 12,
+  },
+  writeInput: {
+    flex: 1,
+    paddingVertical: 8,
+  },
+  writePlaceholder: {
+    fontSize: 16,
+    color: "#333",
+  },
+  writeSubtext: {
+    fontSize: 12,
+    color: "#999",
+    letterSpacing: 0.5,
+  },
+  attachButton: {
+    padding: 8,
   },
 });
