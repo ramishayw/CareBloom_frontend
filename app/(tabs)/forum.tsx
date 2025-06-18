@@ -43,6 +43,10 @@ export default function Forum() {
     });
   };
 
+  const handleAddQuestion = () => {
+    router.push("/forum-addquestion");
+  };
+
   return (
     <>
       <Header />
@@ -77,7 +81,7 @@ export default function Forum() {
         </ScrollView>
 
         {/* Add Question Button */}
-        <TouchableOpacity style={styles.addQuestionButton}>
+        <TouchableOpacity style={styles.addQuestionButton} onPress={handleAddQuestion}>
           <Text style={styles.addQuestionText}>Add Question</Text>
         </TouchableOpacity>
       </View>
@@ -113,7 +117,7 @@ const styles = StyleSheet.create({
   },
   questionsList: {
     flex: 1,
-    backgroundColor: "#f1f1f1", // f9f9f9
+    backgroundColor: "#f1f1f1",
   },
   questionRow: {
     flexDirection: "row",
