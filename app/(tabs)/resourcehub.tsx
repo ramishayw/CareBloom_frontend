@@ -2,6 +2,7 @@ import Header from '@/components/Header';
 import { MaterialIcons } from '@expo/vector-icons';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import {
   Image,
@@ -13,6 +14,7 @@ import {
 } from "react-native";
 
 export default function ResourceHub() {
+  const router = useRouter();
   const guidesScrollRef = useRef<ScrollView>(null);
   const videosScrollRef = useRef<ScrollView>(null);
   const [guidesScrollPosition, setGuidesScrollPosition] = useState(0);
@@ -61,7 +63,7 @@ export default function ResourceHub() {
     {
       title: "Baby Massage",
       subtitle: "Gentle massage techniques for newborns.",
-      image: "",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi9PL4kSTOuI_Oaf8cSGX8fwBIxjGcE_jKXQ&s",
       duration: "12 min"
     },
     {
@@ -79,7 +81,8 @@ export default function ResourceHub() {
     {
       title: "Swaddling Techniques",
       subtitle: "How to swaddle your baby properly.",
-      image: "",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi9PL4kSTOuI_Oaf8cSGX8fwBIxjGcE_jKXQ&s",
+      
       duration: "10 min"
     },
   ];
@@ -123,6 +126,13 @@ export default function ResourceHub() {
   const isVideosAtStart = videosScrollPosition === 0;
   const isVideosAtEnd = videosScrollPosition >= (videos.length - 2) * cardWidth;
 
+  const handleCategoryPress = (categoryName: string) => {
+    if (categoryName === 'Pregnancy') {
+      router.push('/pregnancy-category');
+    }
+    
+  };
+
   const resourceCategories = [
     { name: "Pregnancy", icon: "pregnant-woman" },
     { name: "Postpartum", icon: "child-friendly" },
@@ -161,7 +171,11 @@ export default function ResourceHub() {
           <Text style={styles.sectionTitle}>Browse Categories</Text>
           <View style={styles.categoriesGrid}>
             {resourceCategories.map((category, index) => (
-              <TouchableOpacity key={index} style={styles.categoryCard}>
+              <TouchableOpacity 
+                key={index} 
+                style={styles.categoryCard}
+                onPress={() => handleCategoryPress(category.name)}
+              >
                 <View style={styles.categoryIconContainer}>
                   <MaterialIcons name={category.icon as any} size={32} color="#776391" />
                 </View>
