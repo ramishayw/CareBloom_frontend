@@ -84,7 +84,7 @@ export default function PregnancyCategory() {
           onPress={() => router.back()}
         >
           <MaterialIcons name="arrow-back" size={24} color="#776391" />
-          <Text style={styles.backText}>Back to Resources</Text>
+          <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
 
         {/* Header */}
