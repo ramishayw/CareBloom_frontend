@@ -1,11 +1,13 @@
+import CardOne from '@/components/CardOne';
+import CardTwo from '@/components/CardTwo';
 import Header from '@/components/Header';
-import HealthTipCard from '@/components/HealthTipCard';
+import SectionTitle from '@/components/Title';
 import { MaterialIcons } from '@expo/vector-icons';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  Image,
+  Animated, Dimensions,
   ScrollView,
   StyleSheet,
   Text,
@@ -23,10 +25,49 @@ export default function Home() {
     return "Good Evening";
   };
 
+  const [currentTipIndex, setCurrentTipIndex] = useState(0);
   const workshopsScrollRef = useRef(null);
   const productsScrollRef = useRef(null);
   const [workshopsScrollPosition, setWorkshopsScrollPosition] = useState(0);
   const [productsScrollPosition, setProductsScrollPosition] = useState(0);
+
+  const slideAnim = useRef(new Animated.Value(0)).current;
+  const screenWidth = Dimensions.get('window').width;
+
+  const healthTips = [
+    {
+      title: "Stay Hyderated",
+      desciption: "Drinking plenty of water is essential for both you and your baby's health. Aim for at least 8 glasses a day.",
+      image: require("../../assets/images/Home/Dehydration-During-Pregnancy-1.jpg"),
+    },
+    {
+      title: "Healthy Eating",
+      desciption: "Eating a balanced diet is important for both you and your baby's health. Focus on whole, nutrient-dense foods.",
+      image: require("../../assets/images/Home/pexels-ella-olsson-572949-1640777.jpg"),
+    },
+    {
+      title: "Sleep Well",
+      desciption: "Sleep is essential for both you and your baby's health. Get enough quality sleep each night.",
+      image: require("../../assets/images/Home/pexels-olly-3807624.jpg"),
+    }
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const nextIndex = (currentTipIndex + 1) % healthTips.length;
+      
+      // Slide to next tip
+      Animated.timing(slideAnim, {
+        toValue: -screenWidth * nextIndex,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+      
+      setCurrentTipIndex(nextIndex);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [currentTipIndex, slideAnim, healthTips.length, screenWidth]);
 
   const workshops = [
     {
@@ -170,11 +211,53 @@ export default function Home() {
       </View>
 
       {/* Health Tip */}
-      <HealthTipCard />
+      <View>
+        {/* <Text style={styles.sectionTitle}>Health Tips</Text> */}
+        <SectionTitle title={"Health Tips"} />
+        <View style={styles.healthTipWrapper}>
+          <Animated.View 
+            style={[
+              styles.healthTipSlider,
+              {
+                transform: [{ translateX: slideAnim }],
+                width: screenWidth * healthTips.length
+              }
+            ]}
+          >
+            {healthTips.map((tip, index) => (
+              // <View key={index} style={[styles.healthTipContainer, { width: screenWidth - 32 }]}>
+              //   <Image
+              //     source={tip.image}
+              //     style={styles.tipImage}
+              //     resizeMode="cover" 
+              //   />
+              //   <Text style={styles.tipText}>
+              //     <Text style={styles.bold}>{tip.title}</Text> {"\n\n"}
+              //     <Text style={styles.text}>{tip.desciption}</Text>
+              //   </Text>
+              // </View>
+              <CardTwo key={index} tip={tip} index={index} screenWidth={screenWidth} />
+            ))}
+          </Animated.View>
+        </View>
+        {/* Health tip indicators */}
+        {/* <View style={styles.indicatorContainer}>
+          {healthTips.map((_, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.indicator,
+                currentTipIndex === index ? styles.activeIndicator : styles.inactiveIndicator
+              ]}
+              onPress={() => handleTipNavigation(index)}
+            />
+          ))}
+        </View> */}
+      </View>
 
       {/* Workshops */}
       <View>
-        <Text style={styles.sectionTitle}>Workshops</Text>
+        <SectionTitle title={"Workshops"} />
         <View style={styles.carouselContainer}>
           {!isWorkshopsAtStart && (
             <TouchableOpacity onPress={handleWorkshopsPrev} style={[styles.navButton, styles.leftButton]}>
@@ -190,13 +273,7 @@ export default function Home() {
             scrollEnabled={false}
           >
             {workshops.map((item, index) => (
-              <View key={index} style={styles.card}>
-                <Image source={{ uri: item.image }} style={styles.cardImage} /> 
-                <Text style={styles.cardContent}> 
-                  <Text style={styles.cardTitle}>{item.title}</Text> {"\n"}
-                  <Text style={styles.cardSubtitle}>{item.subtitle}</Text>
-                </Text>
-              </View>
+              <CardOne key={index} item={item} index={index} />
             ))}
           </ScrollView>
 
@@ -210,7 +287,7 @@ export default function Home() {
 
       {/* Featured Products */}
       <View style={styles.featuredContainer}>
-        <Text style={styles.sectionTitle}>Featured Products</Text>
+        <SectionTitle title={"Featured Products"} />
         <View style={styles.carouselContainer}>
           {!isProductsAtStart && (
             <TouchableOpacity onPress={handleProductsPrev} style={[styles.navButton, styles.leftButton]}>
@@ -226,13 +303,7 @@ export default function Home() {
             scrollEnabled={false}
           >
             {products.map((item, index) => (
-              <View key={index} style={styles.card}>
-                <Image source={{ uri: item.image }} style={styles.cardImage} />
-                <Text style={styles.cardContent}> 
-                  <Text style={styles.cardTitle}>{item.title}</Text> {"\n"}
-                  <Text style={styles.cardSubtitle}>{item.subtitle}</Text>
-                </Text>
-              </View>
+              <CardOne key={index} item={item} index={index} />
             ))}
           </ScrollView>
 

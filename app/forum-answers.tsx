@@ -1,3 +1,4 @@
+import Subheader from "@/components/Subheader";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -49,13 +50,7 @@ export default function QuestionDetails() {
     >
       <View style={styles.container}>
         {/* Custom Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
-            <Ionicons name="chevron-back" size={24} color="#333" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Question</Text>
-          <View style={styles.headerRight} />
-        </View>
+        <Subheader title="Answers" />
 
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           {/* Original Question */}
@@ -143,28 +138,28 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f8f9fa",
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    paddingTop: 50,
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
-  },
-  backButton: {
-    padding: 4,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-  },
-  headerRight: {
-    width: 32,
-  },
+  // header: {
+  //   flexDirection: "row",
+  //   alignItems: "center",
+  //   justifyContent: "space-between",
+  //   paddingHorizontal: 16,
+  //   paddingVertical: 12,
+  //   paddingTop: 50,
+  //   backgroundColor: "#fff",
+  //   borderBottomWidth: 1,
+  //   borderBottomColor: "#f0f0f0",
+  // },
+  // backButton: {
+  //   padding: 4,
+  // },
+  // headerTitle: {
+  //   fontSize: 18,
+  //   fontWeight: "600",
+  //   color: "#333",
+  // },
+  // headerRight: {
+  //   width: 32,
+  // },
   content: {
     flex: 1,
   },
