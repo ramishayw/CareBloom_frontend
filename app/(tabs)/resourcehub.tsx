@@ -181,6 +181,7 @@ export default function ResourceHub() {
                 </View>
                 <Text style={styles.categoryName}>{category.name}</Text>
               </TouchableOpacity>
+              // <CardThree category={category} index={index} handleCategoryPress={handleCategoryPress} key={index} />
             ))}
           </View>
         </View>
@@ -341,7 +342,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   categoryCard: {
-    width: '30%',
+    width: '31.5%',
     backgroundColor: '#fff',
     borderRadius: 12,
     padding: 16,

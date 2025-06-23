@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
-export default function HealthTipCard ({ tip, index, screenWidth }) {
+export default function CardTwo ({ tip, index, screenWidth }) {
   return (
     <View key={index} style={[styles.healthTipContainer, { width: screenWidth - 32 }]}>
       <Image
