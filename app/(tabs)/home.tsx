@@ -1,7 +1,7 @@
 import CardOne from '@/components/CardOne';
 import CardTwo from '@/components/CardTwo';
 import Header from '@/components/Header';
-import SectionTitle from '@/components/Title';
+import SectionTitle from '@/components/SectionTitle';
 import { MaterialIcons } from '@expo/vector-icons';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { LinearGradient } from 'expo-linear-gradient';

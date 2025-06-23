@@ -1,89 +1,154 @@
+import CardThree from "@/components/CardThree";
 import Header from "@/components/Header";
-import { Ionicons } from "@expo/vector-icons";
+import SearchBar from "@/components/SearchBar";
+import SectionTitle from "@/components/SectionTitle";
+import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import React, { useRef, useState } from "react";
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 export default function Marketplace() {
-  const forumQuestions = [
-    {
-      id: 1,
-      question: "What are common first trimester",
-      answers: 12
-    },
-    {
-      id: 2,
-      question: "Need help choosing baby names!",
-      answers: 25
-    },
-    {
-      id: 3,
-      question: "Ideas for nursery decor?",
-      answers: 8
-    },
-    {
-      id: 4,
-      question: "What's a good pregnancy diet?",
-      answers: 15
-    },
-    {
-      id: 5,
-      question: "Safe exercises during pregnancy?",
-      answers: 10
+  const workshopsScrollRef = useRef(null);
+  const [workshopsScrollPosition, setWorkshopsScrollPosition] = useState(0);
+
+  const handleCategoryPress = (categoryName: string) => {
+    if (categoryName === 'Pregnancy') {
+      router.push('/marketplace-category-pregnancy');
     }
+    else if (categoryName === 'Postpartum') {
+      router.push('/marketplace-category-postpartum');
+    }
+  };
+
+  const resourceCategories = [
+    { name: "Pregnancy", icon: "pregnant-woman" },
+    { name: "Postpartum", icon: "child-friendly" },
+    { name: "Baby Care", icon: "baby-changing-station" },
+    { name: "Nutrition", icon: "local-dining" },
+    { name: "Mental Health", icon: "self-improvement" },
+    { name: "Workshops", icon: "group-work" },
+    { name: "Workshops", icon: "group-work" },
   ];
 
-  const handleQuestionPress = (questionId, question) => {
-    router.push({
-      pathname: "/forum-answers",
-      params: { 
-        id: questionId,
-        question: question,
-        answers: forumQuestions.find(q => q.id === questionId)?.answers || 0
-      }
-    });
+  const workshops = [
+    {
+      title: "Prenatal Yoga",
+      subtitle: "Learn gentle exercises to prepare for labor.",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi9PL4kSTOuI_Oaf8cSGX8fwBIxjGcE_jKXQ&s",
+    },
+    {
+      title: "Breastfeeding Basics",
+      subtitle: "Master the art of breastfeeding.",
+      image: "https://cdn-icons-png.flaticon.com/512/3793/3793589.png",
+    },
+    {
+      title: "Baby Care 101",
+      subtitle: "Essential care tips for new parents.",
+      image: "https://cdn-icons-png.flaticon.com/512/3793/3793589.png",
+    },
+    {
+      title: "Prenatal Yoga",
+      subtitle: "Learn gentle exercises to prepare for labor.",
+      image: "https://cdn-icons-png.flaticon.com/512/4151/4151526.png",
+    },
+    {
+      title: "Breastfeeding Basics",
+      subtitle: "Master the art of breastfeeding.",
+      image: "https://cdn-icons-png.flaticon.com/512/3793/3793596.png",
+    },
+    {
+      title: "Baby Care 101",
+      subtitle: "Essential care tips for new parents.",
+      image: "https://cdn-icons-png.flaticon.com/512/3793/3793589.png",
+    },
+  ];
+
+  const cardWidth = 132; 
+
+  const handleWorkshopsNext = () => {
+    const newPosition = workshopsScrollPosition + cardWidth;
+    const maxScroll = (workshops.length - 2) * cardWidth; // Show 2 cards at a time
+    const scrollTo = Math.min(newPosition, maxScroll);
+    
+    workshopsScrollRef.current?.scrollTo({ x: scrollTo, animated: true });
+    setWorkshopsScrollPosition(scrollTo);
   };
 
-  const handleAddQuestion = () => {
-    router.push("/forum-addquestion");
+  const handleWorkshopsPrev = () => {
+    const newPosition = Math.max(workshopsScrollPosition - cardWidth, 0);
+    
+    workshopsScrollRef.current?.scrollTo({ x: newPosition, animated: true });
+    setWorkshopsScrollPosition(newPosition);
   };
+
+  const isWorkshopsAtStart = workshopsScrollPosition === 0;
+  const isWorkshopsAtEnd = workshopsScrollPosition >= (workshops.length - 2) * cardWidth;
 
   return (
     <>
       <Header />
       <View style={styles.container}>
-        {/* Search Bar */}
-        <View style={styles.searchContainer}>
-          <View style={styles.searchBar}>
-            <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search"
-              placeholderTextColor="#999"
-            />
+        <SearchBar />
+
+        {/* categories */}
+        <View>
+          <SectionTitle title={"Categories"} />
+          <View style={styles.carouselContainer}>
+            {!isWorkshopsAtStart && (
+              <TouchableOpacity onPress={handleWorkshopsPrev} style={[styles.navButton, styles.leftButton]}>
+                <MaterialIcons name="navigate-before" size={24} color="#333" />
+              </TouchableOpacity>
+            )}
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.baseContainer}
+              ref={workshopsScrollRef}
+              scrollEnabled={false}
+            >
+              {resourceCategories.map((item, index) => (
+                <CardThree category={item} index={index} handleCategoryPress={handleCategoryPress} key={index} />
+              ))}
+            </ScrollView>
+
+            {!isWorkshopsAtEnd && (
+              <TouchableOpacity onPress={handleWorkshopsNext} style={[styles.navButton, styles.rightButton]}>
+                <MaterialIcons name="navigate-next" size={24} color="#333" />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 
-        {/* Forum Questions List */}
-        <ScrollView style={styles.questionsList} showsVerticalScrollIndicator={false}>
-          {forumQuestions.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              style={styles.questionRow}
-              onPress={() => handleQuestionPress(item.id, item.question)}
-            >
-              <View style={styles.questionContent}>
-                <Text style={styles.questionText}>{item.question}</Text>
-                <Text style={styles.answersText}>{item.answers} answers</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={20} color="#766391" />
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+        {/* top sellers this month */}
+        <View>
+          <SectionTitle title={"Top Sellers This Month"} />
+          <View style={styles.carouselContainer}>
+            {!isWorkshopsAtStart && (
+              <TouchableOpacity onPress={handleWorkshopsPrev} style={[styles.navButton, styles.leftButton]}>
+                <MaterialIcons name="navigate-before" size={24} color="#333" />
+              </TouchableOpacity>
+            )}
 
-        {/* Add Question Button */}
-        <TouchableOpacity style={styles.addQuestionButton} onPress={handleAddQuestion}>
-          <Text style={styles.addQuestionText}>Add Question</Text>
-        </TouchableOpacity>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.baseContainer}
+              ref={workshopsScrollRef}
+              scrollEnabled={false}
+            >
+              {resourceCategories.map((item, index) => (
+                <CardThree category={item} index={index} handleCategoryPress={handleCategoryPress} key={index} />
+              ))}
+            </ScrollView>
+
+            {!isWorkshopsAtEnd && (
+              <TouchableOpacity onPress={handleWorkshopsNext} style={[styles.navButton, styles.rightButton]}>
+                <MaterialIcons name="navigate-next" size={24} color="#333" />
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
       </View>
     </>
   );
@@ -94,64 +159,37 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f1f1f1",
   },
-  searchContainer: {
-    paddingHorizontal: 16,
-    marginVertical: 20,
-    backgroundColor: "#f1f1f1",
+  carouselContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'relative',
+    marginRight: 12,
   },
-  searchBar: {
+  baseContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f9f9f9",
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  searchIcon: {
-    marginRight: 8,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: "#333",
-  },
-  questionsList: {
-    flex: 1,
-    backgroundColor: "#f1f1f1",
-  },
-  questionRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "#efe8f4",
-    backgroundColor: "#f1f1f1",
-    padding: 16
-  },
-  questionContent: {
-    flex: 1,
-  },
-  questionText: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#333",
-    marginBottom: 4,
-  },
-  answersText: {
-    fontSize: 14,
-    color: "#666",
-  },
-  addQuestionButton: {
-    backgroundColor: "#776391",
+    marginBottom: 24,
     marginHorizontal: 16,
-    marginVertical: 16,
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: "center",
-    marginBottom: 130,
   },
-  addQuestionText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
+  navButton: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 8,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    zIndex: 1,
+  },
+  leftButton: {
+    position: 'absolute',
+    left: 8,
+    transform: [{ translateY: -20 }],
+  },
+  rightButton: {
+    position: 'absolute',
+    right: 8,
+    transform: [{ translateY: -20 }],
   },
 });

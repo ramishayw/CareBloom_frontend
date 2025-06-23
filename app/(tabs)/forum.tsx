@@ -1,7 +1,8 @@
 import Header from "@/components/Header";
+import SearchBar from "@/components/SearchBar";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Forum() {
   const forumQuestions = [
@@ -52,16 +53,7 @@ export default function Forum() {
       <Header />
       <View style={styles.container}>
         {/* Search Bar */}
-        <View style={styles.searchContainer}>
-          <View style={styles.searchBar}>
-            <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search"
-              placeholderTextColor="#999"
-            />
-          </View>
-        </View>
+        <SearchBar />
 
         {/* Forum Questions List */}
         <ScrollView style={styles.questionsList} showsVerticalScrollIndicator={false}>
