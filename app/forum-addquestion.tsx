@@ -1,8 +1,10 @@
-import Header from "@/components/Header";
+import Subheader from "@/components/Subheader";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Alert,
+    Dimensions,
+    Image,
     KeyboardAvoidingView,
     Platform,
     ScrollView,
@@ -13,9 +15,47 @@ import {
     View
 } from "react-native";
 
+const { width: screenWidth } = Dimensions.get('window');
+
 export default function ForumAddQuestion() {
   const [subject, setSubject] = useState("");
   const [content, setContent] = useState("");
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Image carousel data
+  const carouselData = [
+    {
+      image: require("@/assets/images/Forum/question1.jpg"), // Replace with your actual image paths
+      title: "Ask Questions",
+      description: "Get answers from the community"
+    },
+    {
+      image: require("@/assets/images/Forum/question2.jpg"),
+      title: "Share Knowledge",
+      description: "Help others learn and grow"
+    },
+    {
+      image: require("@/assets/images/Forum/question3.jpg"),
+      title: "Join Discussions",
+      description: "Connect with like-minded people"
+    },
+    {
+      image: require("@/assets/images/Forum/question4.jpg"),
+      title: "Learn Together",
+      description: "Discover new perspectives"
+    }
+  ];
+
+  // Auto-rotate images every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === carouselData.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handlePostQuestion = () => {
     if (!subject.trim() || !content.trim()) {
@@ -41,17 +81,46 @@ export default function ForumAddQuestion() {
       style={{ flex: 1 }} 
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <Header />
+      <Subheader title="Question" />
+      
+      {/* Image Carousel */}
+      <View style={styles.carouselContainer}>
+        <Image 
+          source={carouselData[currentImageIndex].image}
+          style={styles.carouselImage}
+          resizeMode="cover"
+        />
+        <View style={styles.imageOverlay}>
+          <Text style={styles.overlayTitle}>
+            {carouselData[currentImageIndex].title}
+          </Text>
+          <Text style={styles.overlayDescription}>
+            {carouselData[currentImageIndex].description}
+          </Text>
+        </View>
+        
+        {/* Dots Indicator */}
+        {/* <View style={styles.dotsContainer}>
+          {carouselData.map((_, index) => (
+            <View
+              key={index}
+              style={[
+                styles.dot,
+                index === currentImageIndex && styles.activeDot
+              ]}
+            />
+          ))}
+        </View> */}
+      </View>
+
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
-          <Text style={styles.title}>Ask a Question</Text>
           
           {/* Subject Input */}
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Subject</Text>
             <TextInput
               style={styles.subjectInput}
-              placeholder="What's your question about?"
+              placeholder="Title"
               placeholderTextColor="#999"
               value={subject}
               onChangeText={setSubject}
@@ -61,10 +130,9 @@ export default function ForumAddQuestion() {
 
           {/* Content Input */}
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Content</Text>
             <TextInput
               style={styles.contentInput}
-              placeholder="Describe your question in detail..."
+              placeholder="Description"
               placeholderTextColor="#999"
               value={content}
               onChangeText={setContent}
@@ -103,6 +171,59 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f1f1f1",
   },
+  carouselContainer: {
+    height: 200,
+    position: "relative",
+    marginVertical: 20,
+    marginHorizontal: 16,
+  },
+  carouselImage: {
+    width: screenWidth - 32,
+    height: 200,
+    borderRadius: 12,
+  },
+  imageOverlay: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "rgba(119, 99, 145, 0.5)",
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    borderBottomEndRadius: 12,
+    borderBottomLeftRadius  : 12,
+  },
+  overlayTitle: {
+    color: "#fff", 
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 4,
+  },
+  overlayDescription: {
+    color: "#fff",
+    fontSize: 14,
+    opacity: 0.9,
+  },
+  dotsContainer: {
+    position: "absolute",
+    bottom: 10,
+    right: 20,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "rgba(255, 255, 255, 0.4)",
+    marginLeft: 6,
+  },
+  activeDot: {
+    backgroundColor: "#fff",
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
   content: {
     paddingHorizontal: 16,
     paddingTop: 20,
@@ -125,9 +246,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subjectInput: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 16,
+    backgroundColor: "#f9f9f9",
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     fontSize: 16,
     color: "#333",
     borderWidth: 1,
@@ -153,7 +275,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     paddingHorizontal: 16,
-    paddingBottom: 130,
+    // paddingBottom: 130,
+    paddingBottom: 52,
     paddingTop: 10,
     backgroundColor: "#f1f1f1",
   },
