@@ -11,11 +11,11 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Button, Card, Title, TextInput, HelperText, Divider } from 'react-native-paper';
 
-// Mock login function - replace with actual API call
+//login 
 const loginMother = async (hospitalId: string, regNo: string, password: string) => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      // Accept any credentials for demo purposes
+      //demo
       resolve({ success: true, token: 'mock-token', user: { id: '1', name: 'Test User' } });
     }, 1000);
   });
@@ -68,7 +68,7 @@ export default function HospitalLogin() {
     try {
       await loginMother(hospitalId || '', registrationNumber, password);
       
-      //navigate to Hospital Dashboard
+      //navigate to hospital dashboard
       Alert.alert(
         'Login Successful',
         'Welcome to the MOH Portal!',
@@ -114,7 +114,7 @@ export default function HospitalLogin() {
 
       <Card style={styles.card}>
         <Card.Content>
-          {/* Hospital Name Display */}
+          {/* hospital name display */}
           <View style={styles.hospitalInfo}>
             <MaterialIcons name="local-hospital" size={24} color="#776391" />
             <Text style={styles.hospitalName}>{hospitalName}</Text>
@@ -122,7 +122,6 @@ export default function HospitalLogin() {
           
           <Divider style={styles.divider} />
 
-          {/* General Error Message */}
           {errors.general ? (
             <View style={styles.errorContainer}>
               <MaterialIcons name="error" size={20} color="#d32f2f" />

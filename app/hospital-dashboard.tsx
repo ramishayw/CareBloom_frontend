@@ -87,7 +87,7 @@ export default function HospitalDashboard() {
       <Header />
       
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        {/* Hospital and User Info Card */}
+        {/* hospital and user card */}
         <Card style={styles.card}>
           <Card.Content>
             <LinearGradient
@@ -111,7 +111,7 @@ export default function HospitalDashboard() {
         </Card>
 
         <View style={styles.content}>
-          {/* Assigned Midwife Card */}
+          {/* midwife card */}
           <Card style={styles.card}>
             <Card.Content>
               <View style={styles.cardHeader}>
@@ -160,7 +160,7 @@ export default function HospitalDashboard() {
             </Card.Content>
           </Card>
 
-          {/* Alert Section - Upcoming Home Visit */}
+          {/* upcoming home visit */}
           <Card style={styles.card}>
             <Card.Content>
               <View style={styles.alertHeader}>
@@ -206,7 +206,7 @@ export default function HospitalDashboard() {
             </Card.Content>
           </Card>
 
-          {/* Upcoming Clinic Info */}
+          {/*clinic */}
           <Card style={styles.card}>
             <Card.Content>
               <View style={styles.cardHeader}>
@@ -253,7 +253,6 @@ export default function HospitalDashboard() {
             </Card.Content>
           </Card>
 
-          {/* Records Section */}
           <View style={styles.recordsSection}>
             <Text style={styles.sectionTitle}>My Records</Text>
             
@@ -285,7 +284,6 @@ export default function HospitalDashboard() {
             </View>
           </View>
 
-          {/* Registered Workshops */}
           <Card style={styles.card}>
             <Card.Content>
               <View style={styles.cardHeader}>
