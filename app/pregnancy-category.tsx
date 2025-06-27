@@ -39,28 +39,8 @@ export default function PregnancyCategory() {
       image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=500&auto=format&fit=crop&q=60",
       type: "guide",
       
-    },
-    {
-      title: "Exercise During Pregnancy",
-      subtitle: "Safe workouts for each trimester",
-      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&auto=format&fit=crop&q=60",
-      type: "guide",
-   
-    },
-    {
-      title: "First Trimester Symptoms",
-      subtitle: "What to expect in your first trimester",
-      image: "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=500&auto=format&fit=crop&q=60",
-      type: "article",
-     
-    },
-    {
-      title: "Prenatal Vitamins Guide",
-      subtitle: "Essential supplements during pregnancy",
-      image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=500&auto=format&fit=crop&q=60",
-      type: "guide",
-     
     }
+  
   ];
 
   const pregnancyMilestones = [

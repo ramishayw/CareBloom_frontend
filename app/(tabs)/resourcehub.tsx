@@ -187,7 +187,7 @@ export default function ResourceHub() {
         </View>
 
 
-        <View style={styles.featuredCard}>
+        {/* <View style={styles.featuredCard}>
           <Image 
             source={{ uri: "https://www.drmanishajain.com/assets/front/images/during-pregnancy.jpg" }} 
             style={styles.featuredImage} 
@@ -201,7 +201,7 @@ export default function ResourceHub() {
               Your comprehensive guide covering all aspects of pregnancy, from nutrition to delivery preparation.
             </Text>
           </View>
-        </View>
+        </View> */}
 
         <View>
           <Text style={styles.sectionTitle}>Essential Guides</Text>
@@ -267,9 +267,9 @@ export default function ResourceHub() {
                     </View>
                   </View>
                   <View style={styles.cardContent}>
-                    <View style={styles.durationBadge}>
+                    {/* <View style={styles.durationBadge}>
                       <Text style={styles.durationText}>{item.duration}</Text>
-                    </View>
+                    </View> */}
                     <Text style={styles.cardTitle}>{item.title}</Text>
                     <Text style={styles.cardSubtitle}>{item.subtitle}</Text>
                   </View>
